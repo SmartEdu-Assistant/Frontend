@@ -4,7 +4,7 @@
 
 ## Технологии
 
-- React (Create React App)
+- React
 - TypeScript
 - React Router
 - Axios
