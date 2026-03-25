@@ -1,30 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import PrivateRoute from './components/PrivateRoute'
+import Login from './components/Login.tsx'
+import Register from './components/Register.tsx'
+import Dashboard from './components/Dashboard.tsx'
+import Courses from './components/Courses.tsx'
+import CourseDetail from './components/CourseDetail.tsx'
+import Groups from './components/Groups.tsx'
+import GroupDetail from './components/GroupDetail.tsx'
+import Students from './components/Students.tsx'
+import StudentDetail from './components/StudentDetail.tsx'
+import Assignments from './components/Assignments.tsx'
+import AssignmentDetail from './components/AssignmentDetail.tsx'
+import Submissions from './components/Submissions.tsx'
+import SubmissionDetail from './components/SubmissionDetail.tsx'
+import PlagiarismReport from './components/PlagiarismReport.tsx'
+import TestResults from './components/TestResults.tsx'
+import GradeJournal from './components/GradeJournal.tsx'
+import AdminStatistics from './components/AdminStatistics.tsx'
+import NotFound from './components/NotFound.tsx'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href='https://vite.dev' target='_blank' rel='noreferrer'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank' rel='noreferrer'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {/* Публичные маршруты */}
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+
+        {/* Приватные маршруты (требуют аутентификации) */}
+        <Route element={<PrivateRoute />}>
+          <Route path='/' element={<Dashboard />} />
+          <Route path='/courses' element={<Courses />} />
+          <Route path='/courses/:courseId' element={<CourseDetail />} />
+          <Route path='/groups' element={<Groups />} />
+          <Route path='/groups/:groupId' element={<GroupDetail />} />
+          <Route path='/students' element={<Students />} />
+          <Route path='/students/:studentId' element={<StudentDetail />} />
+          <Route path='/assignments' element={<Assignments />} />
+          <Route path='/assignments/:assignmentId' element={<AssignmentDetail />} />
+          <Route path='/submissions' element={<Submissions />} />
+          <Route path='/submissions/:submissionId' element={<SubmissionDetail />} />
+          <Route path='/submissions/:submissionId/plagiarism' element={<PlagiarismReport />} />
+          <Route path='/submissions/:submissionId/test-results' element={<TestResults />} />
+          <Route path='/assignments/:assignmentId/journal' element={<GradeJournal />} />
+        </Route>
+
+        {/* Административные маршруты (только ADMIN) */}
+        <Route element={<PrivateRoute requiredRole='ADMIN' />}>
+          <Route path='/admin/statistics' element={<AdminStatistics />} />
+        </Route>
+
+        {/* 404 */}
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
