@@ -1,23 +1,23 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PrivateRoute from './components/PrivateRoute';
-import Login from './components/Login';
-import Register from './components/Register';
-import Dashboard from './components/Dashboard';
-import Courses from './components/Courses';
-import CourseDetail from './components/CourseDetail';
-import Groups from './components/Groups';
-import GroupDetail from './components/GroupDetail';
-import Students from './components/Students';
-import StudentDetail from './components/StudentDetail';
-import Assignments from './components/Assignments';
-import AssignmentDetail from './components/AssignmentDetail';
-import Submissions from './components/Submissions';
-import SubmissionDetail from './components/SubmissionDetail';
-import PlagiarismReport from './components/PlagiarismReport';
-import TestResults from './components/TestResults';
-import GradeJournal from './components/GradeJournal';
-import AdminStatistics from './components/AdminStatistics';
-import NotFound from './components/NotFound';
+import PrivateRoute from './routes/PrivateRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Courses from './pages/Courses';
+import CourseDetail from './pages/CourseDetail';
+import Groups from './pages/Groups';
+import GroupDetail from './pages/GroupDetail';
+import Students from './pages/Students';
+import StudentDetail from './pages/StudentDetail';
+import Assignments from './pages/Assignments';
+import AssignmentDetail from './pages/AssignmentDetail';
+import Submissions from './pages/Submissions';
+import SubmissionDetail from './pages/SubmissionDetail';
+import PlagiarismReport from './pages/PlagiarismReport';
+import TestResults from './pages/TestResults';
+import GradeJournal from './pages/GradeJournal';
+import AdminStatistics from './pages/AdminStatistics';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
