@@ -9,17 +9,21 @@
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.14.1"
   },
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "tsc && vite build",
     "generate-api": "openapi-ts -i ./openapi.yaml -o ./src/api -c @hey-api/client-fetch"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.94.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -33,6 +37,8 @@
     "stylelint": "^15.11.0",
     "stylelint-config-standard": "^34.0.0",
     "stylelint-order": "^6.0.4",
-    "swagger-typescript-api": "^13.6.5"
+    "swagger-typescript-api": "^13.6.5",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.8"
   }
 }
