@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
     Box,
     Button,
@@ -13,7 +13,6 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-    const navigate = useNavigate();
     const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -42,6 +41,9 @@ const Login = () => {
                 <Typography variant="h5" textAlign="center" mb={2}>
                     Вход в систему
                 </Typography>
+                <Alert severity="info" sx={{ mb: 2 }}>
+                    Демо: `teacher@smartedu.local / teacher123` или `admin@smartedu.local / admin123`
+                </Alert>
 
                 {error && (
                     <Alert severity="error" sx={{ mb: 2 }}>

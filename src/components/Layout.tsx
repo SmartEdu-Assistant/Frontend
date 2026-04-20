@@ -11,9 +11,9 @@ import {
     MenuItem,
     Avatar,
     Tooltip,
-    Container,
+    Stack,
 } from '@mui/material';
-import { AccountCircle, Logout } from '@mui/icons-material';
+import { Logout } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 
 const Layout = () => {
@@ -36,11 +36,6 @@ const Layout = () => {
         handleClose();
     };
 
-    const handleNavigate = (path: string) => {
-        navigate(path);
-        handleClose();
-    };
-
     const hideAppBar = location.pathname === '/login' || location.pathname === '/register';
 
     if (hideAppBar) {
@@ -56,28 +51,23 @@ const Layout = () => {
                     </Typography>
 
                     {isAuthenticated && user && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            {/* Навигация по ролям */}
-                            <Button color="inherit" onClick={() => navigate('/courses')}>
-                                Курсы
-                            </Button>
-                            <Button color="inherit" onClick={() => navigate('/groups')}>
-                                Группы
-                            </Button>
-                            <Button color="inherit" onClick={() => navigate('/students')}>
-                                Студенты
-                            </Button>
-                            <Button color="inherit" onClick={() => navigate('/assignments')}>
-                                Задания
-                            </Button>
-
-                            {user.role === 'ADMIN' && (
-                                <Button color="inherit" onClick={() => navigate('/admin/statistics')}>
-                                    Статистика
-                                </Button>
+                        <Stack direction="row" alignItems="center" spacing={1.5}>
+                            {user.role === 'ADMIN' ? (
+                                <>
+                                    <Button color="inherit" onClick={() => navigate('/')}>Главная</Button>
+                                    <Button color="inherit" onClick={() => navigate('/students')}>Преподаватели</Button>
+                                    <Button color="inherit" onClick={() => navigate('/admin/statistics')}>Статистика</Button>
+                                    <Button color="inherit" onClick={() => navigate('/groups')}>Настройки</Button>
+                                </>
+                            ) : (
+                                <>
+                                    <Button color="inherit" onClick={() => navigate('/')}>Главная</Button>
+                                    <Button color="inherit" onClick={() => navigate('/courses')}>Мои курсы</Button>
+                                    <Button color="inherit" onClick={() => navigate('/assignments')}>Журнал</Button>
+                                    <Button color="inherit" onClick={() => navigate('/submissions')}>Профиль</Button>
+                                </>
                             )}
 
-                            {/* Меню пользователя */}
                             <Tooltip title="Профиль">
                                 <IconButton onClick={handleMenu} color="inherit">
                                     <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
@@ -106,7 +96,7 @@ const Layout = () => {
                                     Выйти
                                 </MenuItem>
                             </Menu>
-                        </Box>
+                        </Stack>
                     )}
                 </Toolbar>
             </AppBar>
