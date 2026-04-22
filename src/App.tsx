@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Layout from './components/Layout';
 import PrivateRoute from './routes/PrivateRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -21,39 +23,42 @@ import NotFound from './pages/NotFound';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Публичные маршруты */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            {/* Публичные маршруты (без Layout) */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-        {/* Приватные маршруты (требуют аутентификации) */}
-        <Route element={<PrivateRoute />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/courses/:courseId" element={<CourseDetail />} />
-          <Route path="/groups" element={<Groups />} />
-          <Route path="/groups/:groupId" element={<GroupDetail />} />
-          <Route path="/students" element={<Students />} />
-          <Route path="/students/:studentId" element={<StudentDetail />} />
-          <Route path="/assignments" element={<Assignments />} />
-          <Route path="/assignments/:assignmentId" element={<AssignmentDetail />} />
-          <Route path="/submissions" element={<Submissions />} />
-          <Route path="/submissions/:submissionId" element={<SubmissionDetail />} />
-          <Route path="/submissions/:submissionId/plagiarism" element={<PlagiarismReport />} />
-          <Route path="/submissions/:submissionId/test-results" element={<TestResults />} />
-          <Route path="/assignments/:assignmentId/journal" element={<GradeJournal />} />
-        </Route>
+            {/* Все приватные маршруты внутри Layout с AppBar */}
+            <Route element={<Layout />}>
+              <Route element={<PrivateRoute />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/courses" element={<Courses />} />
+                <Route path="/courses/:courseId" element={<CourseDetail />} />
+                <Route path="/groups" element={<Groups />} />
+                <Route path="/groups/:groupId" element={<GroupDetail />} />
+                <Route path="/students" element={<Students />} />
+                <Route path="/students/:studentId" element={<StudentDetail />} />
+                <Route path="/assignments" element={<Assignments />} />
+                <Route path="/assignments/:assignmentId" element={<AssignmentDetail />} />
+                <Route path="/submissions" element={<Submissions />} />
+                <Route path="/submissions/:submissionId" element={<SubmissionDetail />} />
+                <Route path="/submissions/:submissionId/plagiarism" element={<PlagiarismReport />} />
+                <Route path="/submissions/:submissionId/test-results" element={<TestResults />} />
+                <Route path="/assignments/:assignmentId/journal" element={<GradeJournal />} />
+              </Route>
 
-        {/* Административные маршруты (только ADMIN) */}
-        <Route element={<PrivateRoute requiredRole="ADMIN" />}>
-          <Route path="/admin/statistics" element={<AdminStatistics />} />
-        </Route>
+              <Route element={<PrivateRoute requiredRole="ADMIN" />}>
+                <Route path="/admin/statistics" element={<AdminStatistics />} />
+              </Route>
+            </Route>
 
-        {/* 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
   );
 }
 
