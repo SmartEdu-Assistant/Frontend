@@ -27,9 +27,13 @@ const Login = () => {
         try {
             await login(email, password);
             window.location.href = '/';
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Login error:', err);
-            setError(err?.message || 'Ошибка входа');
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Ошибка входа');
+            }
         } finally {
             setLoading(false);
         }

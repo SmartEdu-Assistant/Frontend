@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { RegisterRequest, UserResponse } from '../api/types.gen';
 
 interface AuthContextType {
-    user: User | null;
+    user: UserResponse | null;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<void>;
     register: (data: RegisterRequest) => Promise<void>;
@@ -10,23 +11,7 @@ interface AuthContextType {
     hasRole: (role: 'ADMIN' | 'TEACHER') => boolean;
 }
 
-type UserRole = 'ADMIN' | 'TEACHER';
-
-interface User {
-    id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    role: UserRole;
-}
-
-interface RegisterRequest {
-    email: string;
-    password: string;
-    first_name: string;
-    last_name: string;
-    role: UserRole;
-}
+type UserRole = UserResponse['role'];
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -36,21 +21,25 @@ export const useAuth = () => {
     return ctx;
 };
 
-const DEMO_USERS: Array<User & { password: string }> = [
+const DEMO_USERS: Array<UserResponse & { password: string }> = [
     {
-        id: 'teacher-1',
+        id: 1,
         first_name: 'Анна',
         last_name: 'Иванова',
         email: 'teacher@smartedu.local',
         role: 'TEACHER',
+        status: 'ACTIVE',
+        created_at: new Date().toISOString(),
         password: 'teacher123',
     },
     {
-        id: 'admin-1',
+        id: 2,
         first_name: 'Сергей',
         last_name: 'Петров',
         email: 'admin@smartedu.local',
         role: 'ADMIN',
+        status: 'ACTIVE',
+        created_at: new Date().toISOString(),
         password: 'admin123',
     },
 ];
@@ -58,17 +47,24 @@ const DEMO_USERS: Array<User & { password: string }> = [
 const SESSION_KEY = 'smartedu-auth-user';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const initialUser = useMemo(() => {
+    const [user, setUser] = useState<UserResponse | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
         const rawUser = window.localStorage.getItem(SESSION_KEY);
-        if (!rawUser) return null;
+        if (!rawUser) {
+            setIsLoading(false);
+            return;
+        }
+
         try {
-            return JSON.parse(rawUser) as User;
+            setUser(JSON.parse(rawUser) as UserResponse);
         } catch (_error) {
-            return null;
+            window.localStorage.removeItem(SESSION_KEY);
+        } finally {
+            setIsLoading(false);
         }
     }, []);
-    const [user, setUser] = useState<User | null>(initialUser);
-    const [isLoading] = useState(false);
 
     const login = async (email: string, password: string) => {
         const foundUser = DEMO_USERS.find(
@@ -85,12 +81,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const register = async (data: RegisterRequest) => {
-        const createdUser: User = {
-            id: `local-${Date.now().toString()}`,
+        const createdUser: UserResponse = {
+            id: Date.now(),
             email: data.email.trim().toLowerCase(),
             first_name: data.first_name,
             last_name: data.last_name,
             role: data.role,
+            status: 'ACTIVE',
+            created_at: new Date().toISOString(),
         };
         setUser(createdUser);
         window.localStorage.setItem(SESSION_KEY, JSON.stringify(createdUser));
@@ -101,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         window.localStorage.removeItem(SESSION_KEY);
     };
 
-    const hasRole = (role: 'ADMIN' | 'TEACHER') => {
+    const hasRole = (role: UserRole) => {
         return user?.role === role;
     };
 

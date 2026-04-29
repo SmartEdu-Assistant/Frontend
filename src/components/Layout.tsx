@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import {
     AppBar,
     Box,
@@ -19,7 +19,6 @@ import { useAuth } from '../context/AuthContext';
 const Layout = () => {
     const { user, logout, isAuthenticated } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -36,11 +35,19 @@ const Layout = () => {
         handleClose();
     };
 
-    const hideAppBar = location.pathname === '/login' || location.pathname === '/register';
+    const adminLinks: Array<{ to: string; title: string }> = [
+        { to: '/', title: 'Главная' },
+        { to: '/students', title: 'Преподаватели' },
+        { to: '/admin/statistics', title: 'Статистика' },
+        { to: '/groups', title: 'Группы' },
+    ];
 
-    if (hideAppBar) {
-        return <Outlet />;
-    }
+    const teacherLinks: Array<{ to: string; title: string }> = [
+        { to: '/', title: 'Главная' },
+        { to: '/courses', title: 'Мои курсы' },
+        { to: '/assignments', title: 'Журнал' },
+        { to: '/submissions', title: 'Профиль' },
+    ];
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -54,17 +61,19 @@ const Layout = () => {
                         <Stack direction="row" alignItems="center" spacing={1.5}>
                             {user.role === 'ADMIN' ? (
                                 <>
-                                    <Button color="inherit" onClick={() => navigate('/')}>Главная</Button>
-                                    <Button color="inherit" onClick={() => navigate('/students')}>Преподаватели</Button>
-                                    <Button color="inherit" onClick={() => navigate('/admin/statistics')}>Статистика</Button>
-                                    <Button color="inherit" onClick={() => navigate('/groups')}>Настройки</Button>
+                                    {adminLinks.map(({ to, title }) => (
+                                        <Button key={to} color="inherit" onClick={() => navigate(to)}>
+                                            {title}
+                                        </Button>
+                                    ))}
                                 </>
                             ) : (
                                 <>
-                                    <Button color="inherit" onClick={() => navigate('/')}>Главная</Button>
-                                    <Button color="inherit" onClick={() => navigate('/courses')}>Мои курсы</Button>
-                                    <Button color="inherit" onClick={() => navigate('/assignments')}>Журнал</Button>
-                                    <Button color="inherit" onClick={() => navigate('/submissions')}>Профиль</Button>
+                                    {teacherLinks.map(({ to, title }) => (
+                                        <Button key={to} color="inherit" onClick={() => navigate(to)}>
+                                            {title}
+                                        </Button>
+                                    ))}
                                 </>
                             )}
 
